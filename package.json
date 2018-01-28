@@ -4,6 +4,8 @@
   "description": "Whiptail wrapper for nodejs",
   "main": "index.js",
   "scripts": {
+    "test" : "npm run cover && npm run checkall",
+
     "jscs": "jscs --config=node_modules/ivs-jssc/ivs-node.jscsrc index.js",
     "eslint": "eslint --config=node_modules/ivs-jssc/ivs-node.eslintrc.js index.js",
     "checkall": "npm run jscs && npm run eslint",
