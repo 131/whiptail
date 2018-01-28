@@ -1,6 +1,6 @@
 {
   "name": "whiptail",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Whiptail wrapper for nodejs",
   "main": "index.js",
   "scripts": {
