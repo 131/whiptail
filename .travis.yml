@@ -6,6 +6,6 @@ after_script:
 deploy:
   provider: npm
   email: 131.frodon@cloudyks.org
-  api_key: $NPM_TOKEN
+  api_key: $NPM_TOKEN 
   on:
     tags: true
