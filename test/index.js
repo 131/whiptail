@@ -17,7 +17,7 @@ async function child(mode) {
   if(mode == "menu") {    
     var whiptail = new Whiptail({notags:true});
     var choices = {"1" : "1", "2" : "2", "3" : "3"};
-    var results = await whiptail.menu("Please choose 1", choices);
+    var results = await whiptail.menu("Default will be 2, please choose 3", choices, 2);
     process.stderr.write(results);
   }
 
@@ -51,6 +51,34 @@ async function child(mode) {
 describe("Testing basics stuffs", function(){
 
   this.timeout(10 * 1000);
+
+
+  it("should test menu", function(done){
+    var output = ''
+
+    var args = [];
+    args.push(process.execPath);
+    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/menu", "--report", "none", "--print", "none");
+    args.push( __filename);
+    args.push("--");
+    args.push('child')
+    args.push('menu');
+    args.push('1>/dev/null');
+
+    var child = pty.spawn("bash", ["-c", args.join(' ')])
+
+    setTimeout(function(){
+      child.on('data', function (c) { output += c })
+      child.write('\x1b[B');//down
+      child.write('\r\n');
+    }, 8000);
+
+    child.on('close', function () {
+       expect(output).to.eql("3");
+        done();
+    })
+  })
+
 
 
   it("should test radiolist", function(done){
@@ -113,32 +141,6 @@ describe("Testing basics stuffs", function(){
     })
   })
 
-
-  it("should test menu", function(done){
-    var output = ''
-
-    var args = [];
-    args.push(process.execPath);
-    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/menu", "--report", "none", "--print", "none");
-    args.push( __filename);
-    args.push("--");
-    args.push('child')
-    args.push('menu');
-    args.push('1>/dev/null');
-
-    var child = pty.spawn("bash", ["-c", args.join(' ')])
-
-    setTimeout(function(){
-      child.on('data', function (c) { output += c })
-      child.write('\x1b[B');//down
-      child.write('\r\n');
-    }, 8000);
-
-    child.on('close', function () {
-       expect(output).to.eql("2");
-        done();
-    })
-  })
 
 
   it("should test inputbox", function(done){

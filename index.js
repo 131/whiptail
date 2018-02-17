@@ -64,9 +64,11 @@ class whiptail {
     }
   }
 
-  async  menu(title, choices) {
-
+  async  menu(title, choices, def) {
     var args = ['--menu', title];
+    if(def !== undefined)
+      args.push("--default-item", def);
+
     args.push(0,0,0);
     for(var k in choices)
       args.push(k, choices[k]);
@@ -90,6 +92,18 @@ class whiptail {
       return null;
     }
   }
+
+  async  yesno(title) {
+    var args = ['--yesno', title];
+    args.push(0,0);
+
+    try {
+      return await this._run(args);
+    } catch(err) {
+      return null;
+    }
+  }
+
 
 
   async  checklist(title, choices) {
