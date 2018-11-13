@@ -69,11 +69,9 @@ class whiptail {
   async  menu(title, choices, def) {
     var args = ['--menu', title];
     if(typeof def == "string" || typeof def == "number")
-    {args.push("--default-item", def);}
-    else if(def) {
-      console.log(def);
+      args.push("--default-item", def);
+    else if(def)
       args.push(...def);
-    }
 
     args.push(0, 0, 0);
     for(var k in choices)
