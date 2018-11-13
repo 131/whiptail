@@ -29,13 +29,15 @@ class whiptail {
 
     if(options && options.notags) {
       var checklist = this.checklist;
-      this.checklist = async(title, choices) => {
+      this.checklist = async (title, choices) => {
         var tmp = rekey(choices);
         var results = await checklist.call(this, title, tmp.map);
-        if(Array.isArray(results))
+        if(Array.isArray(results)) {
           for(var k in results)
             results[k] = tmp.rmap[results[k]];
-        else results = tmp.rmap[results];
+        } else {
+          results = tmp.rmap[results];
+        }
         return results;
       };
     }
@@ -44,7 +46,7 @@ class whiptail {
 
   async inputbox(title, init) {
     var args = ['--inputbox', title];
-    args.push(0,0, init || '');
+    args.push(0, 0, init || '');
 
     try {
       return await this._run(args);
@@ -55,7 +57,7 @@ class whiptail {
 
   async msgbox(text) {
     var args = ['--msgbox', text];
-    args.push(0,0);
+    args.push(0, 0);
 
     try {
       return await this._run(args);
@@ -66,10 +68,14 @@ class whiptail {
 
   async  menu(title, choices, def) {
     var args = ['--menu', title];
-    if(def !== undefined)
-      args.push("--default-item", def);
+    if(typeof def == "string" || typeof def == "number")
+    {args.push("--default-item", def);}
+    else if(def) {
+      console.log(def);
+      args.push(...def);
+    }
 
-    args.push(0,0,0);
+    args.push(0, 0, 0);
     for(var k in choices)
       args.push(k, choices[k]);
 
@@ -82,7 +88,7 @@ class whiptail {
 
   async  radiolist(title, choices) {
     var args = ['--radiolist', title];
-    args.push(0,0,0);
+    args.push(0, 0, 0);
     for(var k in choices)
       args.push(k, choices[k].value || choices[k], !!choices[k].active | 0);
 
@@ -95,7 +101,7 @@ class whiptail {
 
   async  yesno(title) {
     var args = ['--yesno', title];
-    args.push(0,0);
+    args.push(0, 0);
 
     try {
       return await this._run(args);
@@ -108,7 +114,7 @@ class whiptail {
 
   async  checklist(title, choices) {
     var args = ['--checklist', title];
-    args.push(0,0,0);
+    args.push(0, 0, 0);
     for(var k in choices)
       args.push(k, choices[k].value || choices[k], !!choices[k].active | 0);
 

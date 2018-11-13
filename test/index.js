@@ -6,9 +6,13 @@ const pty = require('pty.js');
 
 const Whiptail = require('../');
 
+console.log(process.argv);
 
-if (process.argv[2] === 'child')
-  return child(process.argv[3])
+
+if (process.argv[2] === 'child') {
+    /* eslint-disable-next-line */
+  return child(process.argv[3]);
+}
 
 
 
@@ -56,14 +60,8 @@ describe("Testing basics stuffs", function(){
   it("should test menu", function(done){
     var output = ''
 
-    var args = [];
-    args.push(process.execPath);
-    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/menu", "--report", "none", "--print", "none");
-    args.push( __filename);
-    args.push("--");
-    args.push('child')
-    args.push('menu');
-    args.push('1>/dev/null');
+    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/menu", "--reporter", "none", "--silent"];
+    args.push(process.execPath, __filename, 'child', 'menu', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
 
@@ -84,14 +82,9 @@ describe("Testing basics stuffs", function(){
   it("should test radiolist", function(done){
     var output = ''
 
-    var args = [];
-    args.push(process.execPath);
-    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/radiolist", "--report", "none", "--print", "none");
-    args.push( __filename);
-    args.push("--");
-    args.push('child')
-    args.push('radiolist');
-    args.push('1>/dev/null');
+    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/radiolist", "--reporter", "none", "--silent"];
+    args.push(process.execPath, __filename, 'child', 'radiolist', '1>/dev/null');
+
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
 
@@ -115,14 +108,8 @@ describe("Testing basics stuffs", function(){
   it("should test checklist", function(done){
     var output = ''
 
-    var args = [];
-    args.push(process.execPath);
-    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/checklist", "--report", "none", "--print", "none");
-    args.push( __filename);
-    args.push("--");
-    args.push('child')
-    args.push('checklist');
-    args.push('1>/dev/null');
+    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/checklist", "--reporter", "none", "--silent"];
+    args.push(process.execPath, __filename, 'child', 'checklist', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
 
@@ -146,14 +133,8 @@ describe("Testing basics stuffs", function(){
   it("should test inputbox", function(done){
     var output = ''
 
-    var args = [];
-    args.push(process.execPath);
-    args.push("node_modules/istanbul-alpha-instrument/lib/cli.js", "--preserve-comments", "cover", "--dir", "coverage/child/inputbox", "--report", "none", "--print", "none");
-    args.push( __filename);
-    args.push("--");
-    args.push('child')
-    args.push('inputbox');
-    args.push('1>/dev/null');
+    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/inputbox", "--reporter", "none", "--silent"];
+    args.push(process.execPath, __filename, 'child', 'inputbox', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
 
@@ -168,12 +149,6 @@ describe("Testing basics stuffs", function(){
         done();
     })
   })
-
-
-
-
-
-
 
 
 

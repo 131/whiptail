@@ -4,12 +4,10 @@
   "description": "Whiptail wrapper for nodejs",
   "main": "index.js",
   "scripts": {
-    "test": "npm run cover && npm run checkall",
-    "jscs": "jscs --config=node_modules/ivs-jssc/ivs-node.jscsrc index.js",
-    "eslint": "eslint --config=node_modules/ivs-jssc/ivs-node.eslintrc.js index.js",
-    "checkall": "npm run jscs && npm run eslint",
-    "mocha": "node node_modules/mocha/bin/_mocha",
-    "cover": "node node_modules/istanbul-alpha-instrument/lib/cli.js cover --dir coverage/master --print none --report none node_modules/mocha/bin/_mocha -- -b test/ && node node_modules/istanbul/lib/cli.js  report --include \"coverage/**/coverage.raw.json\" --dir coverage/html/ text-summary html lcov",
+    "test": "npm run cover && npm run eslint",
+    "eslint": "eslint index.js",
+    "mocha": "mocha -b",
+    "cover": "nyc --temp-directory coverage/.nyc_output --report-dir coverage/master --silent --reporter none node_modules/mocha/bin/_mocha -b test/ && nyc --temp-directory coverage/.nyc_output  report --include \"coverage/**/coverage*.json\" --report-dir coverage/html/ --reporter text-summary --reporter html --reporter lcov",
     "coveralls": "npm install coveralls && node ./node_modules/coveralls/bin/coveralls.js < ./coverage/html/lcov.info"
   },
   "author": "Francois Leurent <131.js@cloudyks.org>",
@@ -19,10 +17,9 @@
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
-    "istanbul": "^1.1.0-alpha.1",
-    "istanbul-alpha-instrument": "1.1.0-alpha.1",
-    "ivs-jssc": "^2.1.1",
+    "eslint-plugin-ivs": "^2.1.0",
     "mocha": "^3.1.2",
+    "nyc": "^13.0.1",
     "pty.js": "^0.3.1"
   },
   "directories": {
