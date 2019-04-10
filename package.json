@@ -13,7 +13,7 @@
   "author": "Francois Leurent <131.js@cloudyks.org>",
   "license": "ISC",
   "dependencies": {
-    "nyks": "^5.10.2"
+    "nyks": "^5.11.0"
   },
   "devDependencies": {
     "eslint-plugin-ivs": "^2.1.0",
