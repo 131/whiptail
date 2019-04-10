@@ -9,6 +9,9 @@ const drain   = require('nyks/stream/drain');
 const splitArgs  = require('nyks/process/splitArgs');
 const formatArgs = require('nyks/process/formatArgs');
 
+
+const bin = "whiptail";
+
 class whiptail {
 
 
@@ -108,6 +111,45 @@ class whiptail {
     }
   }
 
+  progress(title, max, init = "Please wait") {
+    let i = 0, ended = false;
+
+    let ctrlc = function(chunk) {
+      if(chunk[0] == 3 || chunk[0] == 4 || chunk[0] == 26)
+        end();
+    };
+
+    process.stdin.on("data", ctrlc);
+
+    let args = ["--title", title, "--gauge", init, 6, 60, 0];
+
+    var child = cp.spawn(bin, args, {
+      stdio : ['pipe', 'inherit', 'inherit'],
+    });
+
+    let tick = function(step, title) {
+      if(ended)
+        return;
+
+      i += step;
+      let line = `XXX\n${Math.floor(i / max * 100)}\n${title}\nXXX\n`;
+      child.stdin.write(line);
+    };
+
+
+    let end = function() {
+      if(ended)
+        return;
+
+      ended = true;
+      child.stdin.end();
+      process.stderr.write("\r\n");
+
+      process.stdin.removeListener('data', ctrlc);
+    };
+
+    return {tick, end};
+  }
 
 
   async  checklist(title, choices) {
@@ -128,7 +170,7 @@ class whiptail {
     var next = defer();
     var args = [].concat(this.options).concat(cmd);
 
-    var child = cp.spawn('whiptail', args, {
+    var child = cp.spawn(bin, args, {
       stdio : ['inherit', 'inherit', 'pipe'],
     });
 
