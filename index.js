@@ -129,7 +129,8 @@ class whiptail {
       stdio : ['pipe', 'inherit', 'inherit'],
     });
 
-    let ticked = 0;
+    let blink = i =>  "." + ("...".substr(0, i % 3)) + ("  ".substr(0, 2 - i % 3));
+    let lastline;
     let tick = function(step, title = "downloading:blink :right (eta :eta)") {
       if(ended)
         return;
@@ -138,14 +139,15 @@ class whiptail {
 
       let elapsed = new Date - start;
       let eta = (i == max) ? 0 : elapsed * (max / i - 1);
-      let blink = ".." + (ticked++ % 2 ? "." : " ");
       title = title
         .replace(':eta', humanDiff(eta / 1000))
-        .replace(':blink', blink);
+        .replace(':blink', blink(Math.floor(elapsed / 1000)));
       title = title.replace(':right', repeat(' ', 60 - title.length + 2));
       i += step;
       let line = `XXX\n${Math.floor(i / max * 100)}\n${title}\nXXX\n`;
-      child.stdin.write(line);
+      if(line !== lastline)
+        child.stdin.write(line);
+      lastline = line;
     };
 
     let end = function() {
