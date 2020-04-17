@@ -19,6 +19,8 @@ class whiptail {
 
   constructor(options) {
     this.options = formatArgs(options, true);
+    this.sync    = false;
+
 
     //notags is not working as it should
     //https://bugzilla.redhat.com/show_bug.cgi?id=1215239
@@ -180,24 +182,35 @@ class whiptail {
   }
 
   _run(cmd) {
+
     var next = defer();
     var args = [].concat(this.options).concat(cmd);
 
-    var child = cp.spawn(bin, args, {
-      stdio : ['inherit', 'inherit', 'pipe'],
-    });
+    if(this.sync) {
+      let child = cp.spawnSync(bin, args, {
+        stdio : ['inherit', 'inherit', 'pipe'],
+      });
 
-    child.on('error', next.reject);
-    child.on('exit', async function(code) {
+      if(child.status !== 0)
+        next.reject(`Bad exit code ${child.status}`);
+      else
+        next.resolve('' + child.stderr);
 
-      if(code !== 0)
-        return next.reject(`Bad exit code ${code}`);
-      var body = await drain(child.stderr);
-      next.resolve('' + body);
-    });
+    } else {
+      let child = cp.spawn(bin, args, {
+        stdio : ['inherit', 'inherit', 'pipe'],
+      });
+
+      child.on('error', next.reject);
+      child.on('exit', async function(code) {
+        if(code !== 0)
+          return next.reject(`Bad exit code ${code}`);
+        var body = await drain(child.stderr);
+        next.resolve('' + body);
+      });
+    }
 
     return next;
-
   }
 
 
