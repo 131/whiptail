@@ -2,7 +2,7 @@
 
 const expect = require('expect.js');
 
-const pty = require('pty.js');
+const pty = require('node-pty');
 
 const Whiptail = require('../');
 
@@ -60,7 +60,7 @@ describe("Testing basics stuffs", function(){
   it("should test menu", function(done){
     var output = ''
 
-    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/menu", "--reporter", "none", "--silent"];
+    var args = [];
     args.push(process.execPath, __filename, 'child', 'menu', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
@@ -82,7 +82,7 @@ describe("Testing basics stuffs", function(){
   it("should test radiolist", function(done){
     var output = ''
 
-    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/radiolist", "--reporter", "none", "--silent"];
+    var args = [];
     args.push(process.execPath, __filename, 'child', 'radiolist', '1>/dev/null');
 
 
@@ -108,7 +108,7 @@ describe("Testing basics stuffs", function(){
   it("should test checklist", function(done){
     var output = ''
 
-    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/checklist", "--reporter", "none", "--silent"];
+    var args = [];
     args.push(process.execPath, __filename, 'child', 'checklist', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])
@@ -133,7 +133,7 @@ describe("Testing basics stuffs", function(){
   it("should test inputbox", function(done){
     var output = ''
 
-    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--report-dir", "coverage/child/inputbox", "--reporter", "none", "--silent"];
+    var args = [];
     args.push(process.execPath, __filename, 'child', 'inputbox', '1>/dev/null');
 
     var child = pty.spawn("bash", ["-c", args.join(' ')])

@@ -1,6 +1,6 @@
 whiptail wrapper for nodejs
 
-[![Build Status](https://travis-ci.org/131/whiptail.svg?branch=master)](https://travis-ci.org/131/whiptail)
+[![Build Status](https://github.com/131/whiptail/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/131/whiptail/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/131/whiptail/badge.svg?branch=master)](https://coveralls.io/github/131/whiptail?branch=master)
 [![Version](https://img.shields.io/npm/v/whiptail.svg)](https://www.npmjs.com/package/whiptail)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
