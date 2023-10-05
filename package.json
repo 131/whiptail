@@ -13,7 +13,8 @@
   "author": "Francois Leurent <131.code@leurent.email>",
   "license": "ISC",
   "dependencies": {
-    "nyks": "^6.2.0"
+    "nyks": "^6.9.3",
+    "wcwidth": "^1.0.1"
   },
   "devDependencies": {
     "eslint-plugin-ivs": "^2.1.0",

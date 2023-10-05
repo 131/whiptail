@@ -2,12 +2,13 @@
 
 const cp = require('child_process');
 
-const sprintf = require('nyks/string/format');
-const defer   = require('nyks/promise/defer');
-const drain   = require('nyks/stream/drain');
-const humanDiff = require('nyks/date/humanDiff');
-const repeat = require('nyks/string/repeat');
 
+const wcwidth    = require('wcwidth');
+const sprintf    = require('nyks/string/format');
+const defer      = require('nyks/promise/defer');
+const drain      = require('nyks/stream/drain');
+const humanDiff  = require('nyks/date/humanDiff');
+const repeat     = require('nyks/string/repeat');
 const splitArgs  = require('nyks/process/splitArgs');
 const formatArgs = require('nyks/process/formatArgs');
 
@@ -17,7 +18,7 @@ const bin = "whiptail";
 class whiptail {
 
 
-  constructor(options) {
+  constructor(options = {notags : true}) {
     this.options = formatArgs(options, true);
     this.sync    = false;
 
@@ -144,7 +145,7 @@ class whiptail {
       title = title
         .replace(':eta', humanDiff(eta / 1000))
         .replace(':blink', blink(Math.floor(elapsed / 1000)));
-      title = title.replace(':right', repeat(' ', 60 - title.length + 2));
+      title = title.replace(':right', repeat(' ', 60 - wcwidth(title) + 2));
       i += step;
       let line = `XXX\n${Math.floor(i / max * 100)}\n${title}\nXXX\n`;
       if(line !== lastline)
