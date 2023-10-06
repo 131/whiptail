@@ -116,56 +116,6 @@ class whiptail {
     }
   }
 
-  progress(title, max, init = "Please wait") {
-    let i = 0, ended = false;
-    let start;
-    let ctrlc = function(chunk) {
-      if(chunk[0] == 3 || chunk[0] == 4 || chunk[0] == 26)
-        end();
-    };
-
-    process.stdin.on("data", ctrlc);
-
-    let args = ["--title", title, "--gauge", init, 6, 60, 0];
-
-    var child = cp.spawn(bin, args, {
-      stdio : ['pipe', 'inherit', 'inherit'],
-    });
-
-    let blink = i =>  "." + ("...".substr(0, i % 3)) + ("  ".substr(0, 2 - i % 3));
-    let lastline;
-    let tick = function(step, title = "downloading:blink :right (eta :eta)") {
-      if(ended)
-        return;
-      if(!start)
-        start = new Date;
-
-      let elapsed = new Date - start;
-      let eta = (i == max) ? 0 : elapsed * (max / i - 1);
-      title = title
-        .replace(':eta', humanDiff(eta / 1000))
-        .replace(':blink', blink(Math.floor(elapsed / 1000)));
-      title = title.replace(':right', repeat(' ', 60 - wcwidth(title) + 2));
-      i += step;
-      let line = `XXX\n${Math.floor(i / max * 100)}\n${title}\nXXX\n`;
-      if(line !== lastline)
-        child.stdin.write(line);
-      lastline = line;
-    };
-
-    let end = function() {
-      if(ended)
-        return;
-
-      ended = true;
-      child.stdin.end();
-      process.stderr.write("\r\n");
-
-      process.stdin.removeListener('data', ctrlc);
-    };
-
-    return {tick, end};
-  }
 
 
   async  checklist(title, choices) {
@@ -214,8 +164,65 @@ class whiptail {
     return next;
   }
 
-
 }
+
+whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {total, width = 60, title = "Please wait"}) {
+  let i = 0, ended = false;
+  let start;
+  let ctrlc = function(chunk) {
+    if(chunk[0] == 3 || chunk[0] == 4 || chunk[0] == 26)
+      terminate();
+  };
+
+  process.stdin.on("data", ctrlc);
+
+  let args = ["--title", title, "--gauge", title, 6, width, 0];
+
+  var child = cp.spawn(bin, args, {
+    stdio : ['pipe', 'inherit', 'inherit'],
+  });
+
+  let blink = i =>  "." + ("...".substr(0, i % 3)) + ("  ".substr(0, 2 - i % 3));
+  let lastline;
+  let tick = function(step, tokens = {}) {
+    if(ended)
+      return;
+    if(!start)
+      start = new Date;
+
+    let elapsed = new Date - start;
+    let eta = (i == total) ? 0 : elapsed * (total / i - 1);
+
+    let body = format
+      .replace(':eta', humanDiff(eta / 1000))
+      .replace(':blink', blink(Math.floor(elapsed / 1000)));
+    for(let key in tokens)
+      body = body.replace(':' + key, tokens[key]);
+
+    body = body.replace(':right', repeat(' ', width - wcwidth(body) + 2));
+    i += step;
+
+    let line = `XXX\n${Math.floor(i / total * 100)}\n${body}\nXXX\n`;
+    if(line !== lastline)
+      child.stdin.write(line);
+    lastline = line;
+  };
+
+  let terminate = function() {
+    if(ended)
+      return;
+
+    ended = true;
+    child.stdin.end();
+    process.stderr.write("\r\n");
+
+    process.stdin.removeListener('data', ctrlc);
+  };
+
+  this.tick = tick;
+  this.terminate = terminate;
+};
+
 
 
 module.exports = whiptail;

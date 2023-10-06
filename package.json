@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run cover && npm run eslint",
-    "eslint": "eslint index.js",
+    "eslint": "eslint .",
     "mocha": "mocha -b",
     "cover": "nyc node_modules/mocha/bin/_mocha -b test/",
     "coveralls": "npm install coveralls && node ./node_modules/coveralls/bin/coveralls.js < ./coverage/html/lcov.info"
