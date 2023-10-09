@@ -166,7 +166,7 @@ class whiptail {
 
 }
 
-whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {total, width = 60, title = "Please wait"}) {
+whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {total = 100, width = 60, title = "Please wait"} = {}) {
   let i = 0, ended = false;
   let start;
   let ctrlc = function(chunk) {
@@ -184,7 +184,13 @@ whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {
 
   let blink = i =>  "." + ("...".substr(0, i % 3)) + ("  ".substr(0, 2 - i % 3));
   let lastline;
+
   let tick = function(step, tokens = {}) {
+    i += step;
+    update(i / total, tokens);
+  };
+
+  let update = function(ratio, tokens = {}) {
     if(ended)
       return;
     if(!start)
@@ -198,11 +204,10 @@ whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {
       .replace(':blink', blink(Math.floor(elapsed / 1000)));
     for(let key in tokens)
       body = body.replace(':' + key, tokens[key]);
-
     body = body.replace(':right', repeat(' ', width - wcwidth(body) + 2));
-    i += step;
+    i = ratio * total;
 
-    let line = `XXX\n${Math.floor(i / total * 100)}\n${body}\nXXX\n`;
+    let line = `XXX\n${Math.floor(ratio * 100)}\n${body}\nXXX\n`;
     if(line !== lastline)
       child.stdin.write(line);
     lastline = line;
@@ -220,6 +225,7 @@ whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {
   };
 
   this.tick = tick;
+  this.update = update;
   this.terminate = terminate;
 };
 
