@@ -63,7 +63,7 @@ class whiptail {
     }
   }
 
-  async msgbox(text, {title = null}) {
+  async msgbox(text, {title = null} = {}) {
     var args = ['--msgbox', text];
     args.push(0, 0);
     if(title)
@@ -107,7 +107,7 @@ class whiptail {
     }
   }
 
-  async  yesno(prompt, {title = null}) {
+  async  yesno(prompt, {title = null} = {}) {
     var args = ['--yesno', prompt];
     args.push(0, 0);
     if(title)
