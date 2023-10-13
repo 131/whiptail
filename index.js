@@ -218,10 +218,13 @@ whiptail.progress =   function(format = "Processing :blink :right (eta :eta)", {
       return;
 
     ended = true;
-    child.stdin.end();
-    process.stderr.write("\r\n");
 
-    process.stdin.removeListener('data', ctrlc);
+    return new Promise(resolve => {
+      child.stdin.end();
+      process.stderr.write("\r\n");
+      child.on("exit", resolve);
+      process.stdin.removeListener('data', ctrlc);
+    });
   };
 
   this.tick = tick;
