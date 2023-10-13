@@ -63,9 +63,11 @@ class whiptail {
     }
   }
 
-  async msgbox(text) {
+  async msgbox(text, {title = null}) {
     var args = ['--msgbox', text];
     args.push(0, 0);
+    if(title)
+      args.push("--title", title);
 
     try {
       return await this._run(args);
@@ -105,9 +107,11 @@ class whiptail {
     }
   }
 
-  async  yesno(title) {
-    var args = ['--yesno', title];
+  async  yesno(prompt, {title = null}) {
+    var args = ['--yesno', prompt];
     args.push(0, 0);
+    if(title)
+      args.push("--title", title);
 
     try {
       return await this._run(args);
